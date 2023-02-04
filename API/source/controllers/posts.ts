@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import axios, { AxiosResponse } from 'axios';
+import { post } from '../routes/posts';
 
 interface Post {
     userId: Number;
@@ -8,13 +9,13 @@ interface Post {
     body: String;
 }
 
+let postList: Array<String> = [];
+
 // getting all posts
 const getPosts = async (req: Request, res: Response, next: NextFunction) => {
     // get some posts
-    let result: AxiosResponse = await axios.get(`https://jsonplaceholder.typicode.com/posts`);
-    let posts: [Post] = result.data;
     return res.status(200).json({
-        message: posts
+        content: postList
     });
 };
 
@@ -63,16 +64,12 @@ const deletePost = async (req: Request, res: Response, next: NextFunction) => {
 // adding a post
 const addPost = async (req: Request, res: Response, next: NextFunction) => {
     // get the data from req.body
-    let title: string = req.body.title;
-    let body: string = req.body.body;
+    let content = req.body.content;
     // add the post
-    let response: AxiosResponse = await axios.post(`https://jsonplaceholder.typicode.com/posts`, {
-        title,
-        body
-    });
+    postList.push(content);
     // return response
     return res.status(200).json({
-        message: response.data
+        content: postList
     });
 };
 
